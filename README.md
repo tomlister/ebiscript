@@ -4,7 +4,7 @@
 
 The main premise of the game is that you are a trader in space but your trades and market data are delayed due to latency.
 
-### I wrote a custom hot reloadable engine for this game in order to improve development.
+### I wrote a custom hot reloadable engine for this game in order to improve development time + quality.
 
 It features:
 
