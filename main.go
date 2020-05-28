@@ -61,7 +61,8 @@ func main() {
 	go func() { log.Println(http.ListenAndServe("localhost:6060", nil)) }()
 	gfxObjects := []gfxObject{}
 	gfxObjectsMutex := &sync.Mutex{}
-	vm := vmService(&gfxObjects, gfxObjectsMutex)
+	entitlements := loadEntitlements()
+	vm := vmService(&gfxObjects, gfxObjectsMutex, entitlements)
 	w := watcher.New()
 	importScripts(vm, w)
 	go func() {

@@ -13,3 +13,4 @@ var main = function() {
         drawText("screen doesn't exist", "#FF0000", 4, (320-105)/2, 240/2)
     }
 }
+console.log(JSON.stringify(httpGET("https://example.com")))

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"log"
 	"os"
@@ -42,9 +43,30 @@ func importScripts(vm *otto.Otto, w *watcher.Watcher) {
 	}
 }
 
-func vmService(gfxObjects *[]gfxObject, gfxObjectsMutex *sync.Mutex) *otto.Otto {
+func vmService(gfxObjects *[]gfxObject, gfxObjectsMutex *sync.Mutex, entitlements EntitlementsData) *otto.Otto {
 	vm := otto.New()
 	log.Println("[VM] Providing engine bindings: libh")
-	importLibh(vm, gfxObjects, gfxObjectsMutex)
+	importLibh(vm, gfxObjects, gfxObjectsMutex, entitlements)
 	return vm
+}
+
+type EntitlementsData struct {
+	Entitlements struct {
+		VMInternet bool     `json:"vm_internet"`
+		VMFiles    []string `json:"vm_files"`
+	} `json:"entitlements"`
+}
+
+func loadEntitlements() EntitlementsData {
+	entitlementsData, err := ioutil.ReadFile("entitlements.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+	entitlements := EntitlementsData{}
+	err = json.Unmarshal(entitlementsData, &entitlements)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println("[VM] Loaded entitlements.")
+	return entitlements
 }

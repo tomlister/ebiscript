@@ -1,14 +1,16 @@
 package main
 
 import (
+	"io/ioutil"
 	"log"
+	"net/http"
 	"sync"
 
 	"github.com/hajimehoshi/ebiten"
 	"github.com/robertkrimen/otto"
 )
 
-func importLibh(vm *otto.Otto, gfxObjects *[]gfxObject, gfxObjectsMutex *sync.Mutex) {
+func importLibh(vm *otto.Otto, gfxObjects *[]gfxObject, gfxObjectsMutex *sync.Mutex, entitlements EntitlementsData) {
 	vm.Set("drawDebugText", func(call otto.FunctionCall) otto.Value {
 		gfxObjectsMutex.Lock()
 		gfxObject := gfxObject{
@@ -128,4 +130,40 @@ func importLibh(vm *otto.Otto, gfxObjects *[]gfxObject, gfxObjectsMutex *sync.Mu
 		gfxObjectsMutex.Unlock()
 		return otto.Value{}
 	})
+
+	vm.Set("httpGET", func(call otto.FunctionCall) otto.Value {
+		if entitlements.Entitlements.VMInternet == true {
+			resp, err := http.Get(call.Argument(0).String())
+			if err != nil {
+				rtr := httpResponse{
+					Status: resp.StatusCode,
+				}
+				returnval, _ := vm.ToValue(rtr)
+				return returnval
+			}
+			defer resp.Body.Close()
+			body, err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				log.Fatal(err)
+			}
+			rtr := httpResponse{
+				Status: resp.StatusCode,
+				Body:   string(body),
+			}
+			returnval, _ := vm.ToValue(rtr)
+			return returnval
+		} else {
+			rtr := httpResponse{
+				Status: 403,
+				Body:   "VM lacks internet entitlement.",
+			}
+			returnval, _ := vm.ToValue(rtr)
+			return returnval
+		}
+	})
+}
+
+type httpResponse struct {
+	Status int    `json:"status"`
+	Body   string `json:"body"`
 }
