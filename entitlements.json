@@ -1,0 +1,8 @@
+{
+    "entitlements": {
+        "vm_internet": true,
+        "vm_files": [
+            "data.json"
+        ]
+    }
+}
