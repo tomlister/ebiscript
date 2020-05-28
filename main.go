@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	_ "net/http/pprof"
+	"strconv"
 	"sync"
 	"time"
 
@@ -62,8 +63,10 @@ func main() {
 	gfxObjectsMutex := &sync.Mutex{}
 	vm := vmService(&gfxObjects, gfxObjectsMutex)
 	w := watcher.New()
-	hotReloadService(vm, w)
+	importScripts(vm, w)
 	go func() {
+		log.Println("[VM] Starting hotreload service.")
+		log.Println("[VM] Watching " + strconv.Itoa(len(w.WatchedFiles())) + " files.")
 		for {
 			select {
 			case event := <-w.Event:
@@ -76,15 +79,7 @@ func main() {
 				if err != nil {
 					log.Fatal(err)
 				}
-				gfxObjectsMutex.Lock()
-				gfxObject := gfxObject{
-					Type: "text",
-					Data: gfxHotReloaded{
-						Life: 1000,
-					},
-				}
-				gfxObjects = append(gfxObjects, gfxObject)
-				gfxObjectsMutex.Unlock()
+				log.Println("[VM] Hotreloaded: " + event.Path)
 			case err := <-w.Error:
 				log.Fatalln(err)
 			case <-w.Closed:
@@ -94,10 +89,7 @@ func main() {
 	}()
 	go w.Start(time.Millisecond * 100)
 	imageAssets := map[string]*ebiten.Image{}
-	imageAssets["bg0"] = importImageAsset("assets/Planet-1.png")
-	imageAssets["earth"] = importImageAsset("assets/earth.png")
-	imageAssets["europa"] = importImageAsset("assets/europa.png")
-	imageAssets["mars"] = importImageAsset("assets/mars.png")
+	importManifest(&imageAssets)
 	gameState := GameState{
 		gfxObjects:      &gfxObjects,
 		gfxObjectsMutex: gfxObjectsMutex,

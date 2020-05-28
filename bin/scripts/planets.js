@@ -24,12 +24,12 @@ var drawPlanets = function() {
     drawSolidImage(buttonbgcolor, 320-30, 10, 20, 20, 0.5)
     drawText("x", "#000000", 10, 320-28, 28)
     drawText("InterplanID - (X66urf)", "#ffffff", 4, 10, 240-10)
-    drawPlanetCard(20, 120-(80/2), "Earth", "earth", 1000)
-    drawPlanetCard(120, 120-(80/2), "Mars", "mars", 178120000-1000)
-    drawPlanetCard(220, 120-(80/2), "Europa", "europa", 628300000-1000)
+    drawPlanetCard(20, 120-(80/2), "Earth", "earth", "market_earth", 1000)
+    drawPlanetCard(120, 120-(80/2), "Mars", "mars", "market_mars", 178120000-1000)
+    drawPlanetCard(220, 120-(80/2), "Europa", "europa", "market_europa", 628300000-1000)
  }
 
-var drawPlanetCard = function(x, y, name, img, distance) {
+var drawPlanetCard = function(x, y, name, img, nscreen, distance) {
     var speedoflight = 299792.485 // km/s
     var mousex = getMouseX()
     var mousey = getMouseY()
@@ -40,6 +40,7 @@ var drawPlanetCard = function(x, y, name, img, distance) {
             cardbgcolor = "#5555ff"
             cardtextcolor = "#5555ff"
             if (isLeftMouseDown()) {
+                currentscreen = nscreen
             }
         }
     }

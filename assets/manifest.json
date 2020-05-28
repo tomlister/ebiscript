@@ -1,0 +1,23 @@
+{
+    "assets": {
+        "images": [
+            {
+                "identifier": "bg0",
+                "path": "assets/Planet-1.png"
+            },
+            {
+                "identifier": "earth",
+                "path": "assets/earth.png"
+            },
+            {
+                "identifier": "europa",
+                "path": "assets/europa.png"
+            },
+            {
+                "identifier": "mars",
+                "path": "assets/mars.png"
+            }
+        ],
+        "sounds": []
+    }
+}
