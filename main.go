@@ -57,8 +57,13 @@ func init() {
 	})
 }
 
+//DEBUG is a flag that enables debugging features such as memory profiling.
+var DEBUG = false
+
 func main() {
-	go func() { log.Println(http.ListenAndServe("localhost:6060", nil)) }()
+	if DEBUG {
+		go func() { log.Println(http.ListenAndServe("localhost:6060", nil)) }()
+	}
 	gfxObjects := []gfxObject{}
 	gfxObjectsMutex := &sync.Mutex{}
 	entitlements := loadEntitlements()
