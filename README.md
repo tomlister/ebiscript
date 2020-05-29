@@ -17,8 +17,8 @@ It features:
 ### VM Quirks/Conventions
 In order to conserve persistence of program states across hot reloads I've included state headers and footers.
 ```js
-#state
+//#state
 var foo = "bar";
-#endstate
+//#endstate
 ```
 Anything inbetween these two comments will only be loaded on vm init and won't be reset if hot reloaded.

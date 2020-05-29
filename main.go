@@ -1,11 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	_ "net/http/pprof"
+	"regexp"
 	"strconv"
 	"sync"
 	"time"
@@ -76,12 +76,13 @@ func main() {
 		for {
 			select {
 			case event := <-w.Event:
-				fmt.Println(event)
 				code, err := ioutil.ReadFile(event.Path)
 				if err != nil {
 					log.Fatal(err)
 				}
-				_, err = vm.Run(string(code))
+				//strip state
+				r, _ := regexp.Compile("\\/\\/#state\n(.*?)\\/\\/#endstate")
+				_, err = vm.Run(r.ReplaceAllString(string(code), "\n"))
 				if err != nil {
 					log.Fatal(err)
 				}
