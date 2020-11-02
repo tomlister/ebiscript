@@ -1,4 +1,5 @@
 # Abandoned!!!!!!
+This really sucks.
 
 ## This was the client for a school software project.
 
