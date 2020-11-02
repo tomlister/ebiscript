@@ -1,10 +1,10 @@
-# Commercium
+# Abandoned!!!!!!
 
-## This is the client for my trading game.
+## This was the client for a school software project.
 
 The main premise of the game is that you are a trader in space but your trades and market data are delayed due to latency.
 
-### I wrote a custom hot reloadable engine for this game in order to improve development time + quality.
+### I wrote a custom hot reloadable engine for this game in order to improve development time + quality (turned out to be terrible so I abandoned this)
 
 It features:
 
